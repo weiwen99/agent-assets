@@ -101,3 +101,17 @@ Then compare the final visible node/edge inventory with the grounded ledger. Fix
 Deliver `.tex`, `.pdf`, `.svg`, and `.png` under a collision-free stem; add `.webp` when the raster is going to a host that prefers it. Keep prior diagram variants unless replacement was explicitly requested. Remove `.aux`, `.log`, `.xdv`, screenshots, and trial renders.
 
 **Done when:** all delivered files exist under one stem, the SVG and PNG show the same diagram, and no temporary artifact is left in the project.
+
+### 8. Pick the artifact for the destination
+
+Default to the `.svg`: it is the same drawing at any zoom and, with the white page rect, stays red-on-white in light and dark viewers. Use it wherever the target renders SVG — a browser, an HTML `<img>`, GitHub's SVG preview, an org or HTML document.
+
+Fall back only when the destination cannot take SVG:
+
+1. `.png` when the slot only accepts a raster (chat attachments, slide tools, image viewers, trackers that strip SVG) or when a fixed pixel width is required.
+2. `.pdf` when the destination is print, LaTeX, or a document pipeline that embeds vector pages.
+3. `.webp` only for a web payload that wants a smaller lossless raster; never as the only copy.
+
+The white page rect fixes dark-mode backgrounds, not a missing SVG renderer: do not hand over an SVG to a consumer that cannot render it.
+
+**Done when:** every delivered file has a named destination, and the format handed over is the first one that destination actually renders.
