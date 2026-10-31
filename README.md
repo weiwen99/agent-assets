@@ -6,7 +6,7 @@
 
 | skill | 用途 |
 |---|---|
-| `tikz-diagramming` | TikZ/LaTeX 技术图：red/rose core-dataflow 配色，输出矢量 PDF + 清晰 PNG |
+| `tikz-diagramming` | TikZ/LaTeX 技术图：red/rose core-dataflow 配色，输出矢量 PDF、自包含 SVG、清晰 PNG（可选 lossless WebP） |
 | `inkscape-diagramming` | 单色 Inkscape/SVG 架构图、业务流程图，输出可编辑 SVG + PNG |
 | `de-ai-flavor` | 按仓库自己的手写基线测量并削掉 AI 文风，不丢事实 |
 | `scala-best-practices` | Scala 3 项目创建与日常编码规范（Mill 优先） |

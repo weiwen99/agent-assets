@@ -43,12 +43,23 @@ It runs on Linux, macOS, Windows, and WSL when the required commands are on `PAT
 
 ```text
 .tex
-  └─ xelatex -no-shell-escape ─→ one-page vector .pdf
-       └─ dvisvgm --pdf ───────→ self-contained vector .svg
-            └─ inkscape ───────→ RGB .png
+  └─ xelatex -no-shell-escape ─→ one-page vector .pdf            ← delivered
+       └─ dvisvgm --pdf ───────→ self-contained vector .svg       ← delivered (white page rect added)
+            └─ inkscape ───────→ RGB .png                         ← delivered, validated
+                 └─ magick ────→ lossless .webp                   (--webp)
 ```
 
-`dvisvgm --no-fonts` converts glyphs to vector paths. This makes the intermediate independent of installed fonts and gives Inkscape real vectors to rasterize.
+`dvisvgm --no-fonts` converts glyphs to vector paths. This makes the SVG independent of installed fonts and gives Inkscape real vectors to rasterize.
+
+## Delivered vector SVG
+
+The SVG returned to the caller is the dvisvgm output with `<rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>` inserted directly after the root `<svg>` element. Without that rect the page is transparent: the PDF viewer supplies white paper, browsers and dark-mode image viewers do not, so thin strokes and dark text disappear.
+
+Because of `--no-fonts`, every glyph is a path. That is exact, self-contained, and font-independent, but the SVG is **not** text-editable and carries per-glyph bulk. Edit the `.tex`, never the SVG.
+
+## Optional WebP
+
+`--webp` converts the already validated PNG with ImageMagick (`-define webp:lossless=true`) and checks the decoded width against `png-width`. Lossless only: lossy WebP damages thin strokes and small CJK labels. Inkscape cannot export WebP, so WebP is always derived from the PNG instead of being rendered a second time.
 
 Before `--page=1` is used, the renderer parses the XeLaTeX log and requires exactly one output page. Extra pages are a layout failure, not content to discard.
 

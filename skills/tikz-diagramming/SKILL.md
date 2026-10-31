@@ -1,11 +1,11 @@
 ---
 name: tikz-diagramming
-description: Draw or revise LaTeX TikZ architecture, business-flow, logic, and data-flow diagrams in the red/rose core-dataflow poster style, producing vector PDF and sharp PNG. Use when a user explicitly asks for TikZ or LaTeX diagrams, requests the core-dataflow style, or needs reproducible print-ready technical visuals; do not use for Inkscape or native-SVG requests.
+description: Draw or revise LaTeX TikZ architecture, business-flow, logic, and data-flow diagrams in the red/rose core-dataflow poster style, producing vector PDF and self-contained SVG plus sharp PNG. Use when a user explicitly asks for TikZ or LaTeX diagrams, requests the core-dataflow style, or needs reproducible print-ready technical visuals; do not use for Inkscape or native-SVG requests.
 ---
 
 # TikZ diagramming
 
-Produce an evidence-backed technical diagram with editable TikZ source, vector PDF, and a sharp web-ready PNG. Preserve semantic detail unless the user explicitly asks for a simplified view.
+Produce an evidence-backed technical diagram with editable TikZ source, vector PDF, a self-contained SVG, and a sharp web-ready PNG. Preserve semantic detail unless the user explicitly asks for a simplified view.
 
 ## Process
 
@@ -78,9 +78,11 @@ The default PNG width is 4800 px and the default per-process timeout is 120 seco
 XeLaTeX -no-shell-escape → one-page vector PDF → dvisvgm vector SVG → Inkscape PNG
 ```
 
-The renderer rejects unacknowledged input, missing tools/fonts, process timeouts, TeX errors, overfull boxes, missing glyph warnings, multi-page PDFs, malformed output, wrong PNG width/color type, and a non-white page corner. It keeps `.tex`, `.pdf`, and `.png`; intermediates stay in a temporary directory.
+The delivered `.svg` is that same dvisvgm output with an explicit white page rect prepended, so it stays red-on-white in browsers and dark image viewers. `--no-fonts` turns glyphs into paths: the SVG is self-contained (no font dependency) but **not** text-editable — the editable source is the `.tex`. `--webp` additionally converts the validated PNG to a lossless WebP (needs ImageMagick).
 
-**Done when:** the renderer exits zero, reports exactly one page, and validates an RGB PNG.
+The renderer rejects unacknowledged input, missing tools/fonts, process timeouts, TeX errors, overfull boxes, missing glyph warnings, multi-page PDFs, malformed output, wrong PNG width/color type, and a non-white page corner. It keeps `.tex`, `.pdf`, `.svg`, and `.png` (plus `.webp` with `--webp`); other intermediates stay in a temporary directory.
+
+**Done when:** the renderer exits zero, reports exactly one page, validates an RGB PNG, and the delivered SVG carries the white page rect.
 
 ### 6. Inspect both delivery scales
 
@@ -88,6 +90,7 @@ Inspect the actual artifacts, not just source:
 
 1. **Native pixels:** zoom the PNG to 100%; letter edges, thin strokes, curves, dashes, and arrowheads must be crisp, with no enlarged-raster halo.
 2. **Fit-to-window:** open the delivered PNG in a real browser around 1568×1161. Every node title, node detail, CJK edge label, numbered step, and terminal state must be identifiable without zoom.
+3. **Vector page:** open the delivered SVG in the same browser, including once with a dark page background; it must show the same diagram as the PNG, stay crisp at any zoom, and keep its white page rect.
 
 Then compare the final visible node/edge inventory with the grounded ledger. Fix clipping, ownership errors, status mismatches, ambiguous endpoints, semantic shortcuts, and typography below the floor. Re-render after every font or geometry change.
 
@@ -95,4 +98,6 @@ Then compare the final visible node/edge inventory with the grounded ledger. Fix
 
 ### 7. Deliver and clean
 
-Deliver `.tex`, `.pdf`, and `.png` under a collision-free stem. Keep prior diagram variants unless replacement was explicitly requested. Remove `.aux`, `.log`, `.xdv`, temporary SVG, screenshots, and trial renders.
+Deliver `.tex`, `.pdf`, `.svg`, and `.png` under a collision-free stem; add `.webp` when the raster is going to a host that prefers it. Keep prior diagram variants unless replacement was explicitly requested. Remove `.aux`, `.log`, `.xdv`, screenshots, and trial renders.
+
+**Done when:** all delivered files exist under one stem, the SVG and PNG show the same diagram, and no temporary artifact is left in the project.
