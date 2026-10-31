@@ -12,6 +12,10 @@ set -eu
 
 repo=${1:-$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)}
 names="tikz-diagramming inkscape-diagramming scala-best-practices de-ai-flavor org-inline-code-spacing design-scope-discipline"
+# Pre-2026-10 directory name for the Scala skill. It is a second copy that declares
+# the same skill name, so it must go too; it is never kept even if it resolves into
+# the clone (only the canonical name can be correct).
+legacy="scala-best-practices-skill"
 
 [ -d "$repo/skills" ] || { echo "not a skill clone: $repo" >&2; exit 1; }
 for name in $names; do
@@ -32,15 +36,19 @@ backup=$(mktemp -d "$state/agent-skills-backup-$(date +%Y%m%d-%H%M%S)-XXXXXX")
 moved=0
 
 for slot in agents claude; do
-  for name in $names; do
+  for name in $names $legacy; do
     target="$HOME/.$slot/skills/$name"
     [ -e "$target" ] || [ -L "$target" ] || continue
 
-    real=$(readlink -f "$target" 2>/dev/null || true)
-    if [ "$real" = "$repo/skills/$name" ]; then
-      echo "keep  $target (already points into the clone)"
-      continue
-    fi
+    case " $names " in
+      *" $name "*)
+        real=$(readlink -f "$target" 2>/dev/null || true)
+        if [ "$real" = "$repo/skills/$name" ]; then
+          echo "keep  $target (already points into the clone)"
+          continue
+        fi
+        ;;
+    esac
 
     if [ -L "$target" ]; then
       echo "move  $target (symlink -> $(readlink "$target"))"
