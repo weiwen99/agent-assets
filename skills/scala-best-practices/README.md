@@ -47,7 +47,7 @@ ln -s ~/projects/agent-assets/skills/scala-best-practices ~/.claude/skills/scala
 
 Copy this prompt into your AI coding agent:
 
-> Please help me create a new Scala 3 project with an HTTP Service that provides an API: /v1/ping, which returns client-side information in as much detail as possible. Follow the scala-best-practices-skill SKILL conventions.
+> Please help me create a new Scala 3 project with an HTTP Service that provides an API: /v1/ping, which returns client-side information in as much detail as possible. Follow the `scala-best-practices` skill conventions.
 
 The agent will then:
 1. Ask you to choose Mill or sbt

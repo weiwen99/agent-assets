@@ -47,7 +47,7 @@ ln -s ~/projects/agent-assets/skills/scala-best-practices ~/.claude/skills/scala
 
 将以下 prompt 复制到你的 AI 编码 Agent：
 
-> 请帮我开一个新的Scala3项目，里面实现一个Http Service，提供一个API：/v1/ping，返回用户端的信息，尽可能详尽。注意遵循 scala-best-practices-skill SKILL 开发规范。
+> 请帮我开一个新的Scala3项目，里面实现一个Http Service，提供一个API：/v1/ping，返回用户端的信息，尽可能详尽。注意遵循 `scala-best-practices` skill 的开发规范。
 
 Agent 会按以下流程执行：
 1. 询问你选择 Mill 还是 sbt
