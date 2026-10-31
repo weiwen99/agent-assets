@@ -26,6 +26,12 @@ ln -s ~/projects/agent-assets/skills/<name> ~/.agents/skills/<name>
 ln -s ~/projects/agent-assets/skills/<name> ~/.claude/skills/<name>   # Claude Code
 ```
 
+槽位上已有手工拷贝时，先跑一次迁移：它把要替换的条目移进带时间戳的备份目录（`agents/`、`claude/` 分开放），已经指向本仓的链接原样保留，遇到既不是目录也不是链接的东西立即停下：
+
+```bash
+scripts/adopt-local-slots.sh ~/projects/agent-assets
+```
+
 本仓不提供 Nix/home-manager module。机器侧的槽位由私有机器配置仓声明为指向本仓工作树的活链接，见 `docs/adr/0001`。
 
 ## 与「规则」的分工
