@@ -74,3 +74,13 @@ For semantic verification, compare the final node/edge inventory against the gro
 ### 6. Deliver the pair
 
 Deliver both the editable `.svg` and rendered `.png`. State the viewpoint and any important omissions. Keep temporary composites or experimental renders out of the project.
+
+**Done when:** both files exist under one stem, the SVG still opens as editable XML, and the PNG was rendered from that same SVG.
+
+### 7. Pick the artifact for the destination
+
+Default to the `.svg`: it is the editable copy of record and the same drawing at any zoom, and the explicit white page keeps it legible in light and dark viewers. Use it wherever the target renders SVG — a browser, an HTML `<img>`, GitHub's SVG preview, an org or HTML document, or a later edit in Inkscape.
+
+Use the `.png` only when the slot accepts a raster: chat attachments, slide tools, image viewers, or a host that strips SVG. The raster always comes from the same SVG (2× by default); never upscale the PNG when the SVG is available.
+
+**Done when:** the format handed over is the first one the destination actually renders, and the SVG remains the copy of record.
