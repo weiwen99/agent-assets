@@ -1,0 +1,3 @@
+interface:
+  display_name: "De-AI Flavor"
+  short_description: "Measure and remove AI-flavored prose against repo house style"

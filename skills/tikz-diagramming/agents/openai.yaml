@@ -1,0 +1,3 @@
+interface:
+  display_name: "TikZ Diagramming"
+  short_description: "Draw red/rose TikZ diagrams with sharp PNG output"

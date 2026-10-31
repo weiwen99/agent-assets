@@ -1,0 +1,3 @@
+interface:
+  display_name: "Org Inline Code Spacing"
+  short_description: "Enforce org-mode inline marker spacing boundaries"

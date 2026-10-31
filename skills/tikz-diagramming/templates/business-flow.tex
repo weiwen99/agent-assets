@@ -1,0 +1,96 @@
+% !TEX program = xelatex
+% Portable red/rose TikZ business-flow template
+\documentclass[11pt]{article}
+\usepackage[paperwidth=34cm, paperheight=20cm, margin=0.6cm]{geometry}
+\pagestyle{empty}
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{xeCJK}
+\usepackage{amsmath,amssymb}
+\usepackage{newunicodechar}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, backgrounds, calc, fit}
+
+\definecolor{accentcolor}{HTML}{B32F17}
+\definecolor{accentlight}{HTML}{D9836F}
+\definecolor{ink}{HTML}{1A1A1A}
+\definecolor{muted}{HTML}{5A5A5A}
+\definecolor{calloutbg}{HTML}{FBF1EE}
+\definecolor{loopbg}{HTML}{F7E9E4}
+
+\providecommand{\DiagramCJKRegular}{FandolSong-Regular.otf}
+\providecommand{\DiagramCJKBold}{FandolSong-Bold.otf}
+\providecommand{\DiagramMonoFont}{lmmono10-regular.otf}
+\setCJKmainfont{\DiagramCJKRegular}[BoldFont=\DiagramCJKBold]
+\setCJKmonofont{\DiagramCJKRegular}
+\setmonofont{\DiagramMonoFont}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↑}{\ensuremath{\uparrow}}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{↓}{\ensuremath{\downarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⇄}{\ensuremath{\rightleftarrows}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+
+\makeatletter
+\renewcommand\footnotesize{\@setfontsize\footnotesize{9pt}{11pt}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{8pt}{9.6pt}}
+\makeatother
+
+\begin{document}
+\centering
+\begin{tikzpicture}[
+  x=1cm, y=1cm, font=\normalsize, text=ink, >={Stealth[length=2.8mm]},
+  svc/.style    ={draw=accentcolor, line width=1.1pt, rounded corners=3pt, fill=white, align=center, inner sep=6pt},
+  core/.style   ={draw=accentcolor, line width=1.3pt, rounded corners=4pt, fill=calloutbg, align=center, inner sep=7pt},
+  aux/.style    ={draw=accentlight, line width=1pt, rounded corners=3pt, fill=white, align=center, inner sep=5pt, text=ink},
+  opt/.style    ={draw=accentlight, line width=1pt, rounded corners=3pt, dashed, fill=white, align=center, inner sep=5pt, text=ink},
+  fl/.style     ={->, draw=accentcolor, line width=1.15pt},
+  biarr/.style  ={<->, draw=accentcolor, line width=1.15pt},
+  ret/.style    ={->, draw=accentlight, line width=1.2pt},
+  retbi/.style  ={<->, draw=accentlight, line width=1.2pt},
+  dashfl/.style ={->, draw=accentlight, line width=1.05pt, dashed},
+  dashbi/.style ={<->, draw=accentlight, line width=1.05pt, dashed},
+  lbl/.style    ={font=\small\bfseries, text=ink, fill=white, inner sep=1.8pt},
+  retlbl/.style ={font=\small\bfseries, text=accentcolor, fill=white, inner sep=1.8pt},
+]
+\path[use as bounding box] (-15,0.8) rectangle (15,-14.5);
+
+\node[anchor=west, font=\fontsize{20}{24}\selectfont\bfseries] at (-14.5,0) {Business Flow};
+\node[anchor=west, font=\footnotesize, text=muted] at (-14.4,-0.7)
+  {Numbered happy path, intervention branch, feedback loop, and terminal outcome};
+
+\node[svc, text width=36mm] (user) at (-12,-6)
+  {\textbf{User}\\\footnotesize initiating actor};
+\node[core, text width=40mm] (admission) at (-5,-6)
+  {\textbf{Admission}\\\footnotesize authenticate \textperiodcentered{} validate};
+\node[core, text width=42mm] (execution) at (2,-6)
+  {\textbf{Execution}\\\footnotesize bounded control loop};
+\node[svc, text width=40mm] (outcome) at (12,-6)
+  {\textbf{Terminal Outcome}\\\footnotesize completed \textperiodcentered{} canceled\\\footnotesize interrupted \textperiodcentered{} error};
+\node[core, text width=44mm] (capability) at (2,-10.5)
+  {\textbf{Capability}\\\footnotesize tool \textperiodcentered{} provider \textperiodcentered{} child};
+\node[aux, text width=42mm] (approval) at (-5,-10.5)
+  {\textbf{Human Approval}\\\footnotesize Allow \textperiodcentered{} Deny};
+
+\begin{scope}[on background layer]
+  \node[fill=loopbg, rounded corners=8pt, fit=(execution)(capability),
+        inner xsep=16pt, inner ysep=15pt] (loopbox) {};
+\end{scope}
+\node[font=\footnotesize\bfseries, text=accentcolor, anchor=north]
+  at ([yshift=-5pt]loopbox.south) {controlled execution loop};
+
+\draw[fl] (user) -- (admission) node[lbl, midway] {1. 提交};
+\draw[fl] (admission) -- (execution) node[lbl, midway] {2. 准入};
+\draw[fl] (execution.south) -- (capability.north)
+  node[lbl, midway, xshift=-9mm] {3. 执行};
+\draw[ret] (capability.east) to[out=25,in=-25,looseness=1.15]
+  node[retlbl, right, pos=0.5] {4. 结果回灌} (execution.east);
+\draw[fl] (execution) -- (outcome) node[lbl, midway] {5. final answer};
+\draw[ret] (outcome.north east) .. controls (14,-2) and (-13,-2) ..
+  node[retlbl, above, pos=0.5] {6. 持久化终态 \textperiodcentered{} 返回用户} (user.north);
+\draw[retbi] (approval) -- (capability)
+  node[retlbl, midway] {Ask / Allow \textperiodcentered{} Deny};
+
+\end{tikzpicture}
+\end{document}

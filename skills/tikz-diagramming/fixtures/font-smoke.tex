@@ -1,0 +1,30 @@
+% Portable font and glyph coverage fixture
+\documentclass[11pt]{article}
+\usepackage[paperwidth=18cm, paperheight=10cm, margin=1cm]{geometry}
+\pagestyle{empty}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\usepackage{amsmath,amssymb}
+\usepackage{newunicodechar}
+
+\providecommand{\DiagramCJKRegular}{FandolSong-Regular.otf}
+\providecommand{\DiagramCJKBold}{FandolSong-Bold.otf}
+\providecommand{\DiagramMonoFont}{lmmono10-regular.otf}
+\setCJKmainfont{\DiagramCJKRegular}[BoldFont=\DiagramCJKBold]
+\setCJKmonofont{\DiagramCJKRegular}
+\setmonofont{\DiagramMonoFont}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↑}{\ensuremath{\uparrow}}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{↓}{\ensuremath{\downarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⇄}{\ensuremath{\rightleftarrows}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+\xeCJKDeclareCharClass{CJK}{"2460 -> "24FF}
+
+\begin{document}
+中文正文：架构图、业务流程图、逻辑图。\par
+\textbf{中文粗体：准入、持久化、恢复、终态。}\par
+\texttt{mono ASCII 0123456789 / 中文等宽文本}\par
+箭头与编号：← ↑ → ↓ ↔ ⇄ ⇒ ① ② ③
+\end{document}

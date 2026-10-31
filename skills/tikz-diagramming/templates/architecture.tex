@@ -1,0 +1,94 @@
+% !TEX program = xelatex
+% Portable red/rose TikZ architecture template
+\documentclass[11pt]{article}
+\usepackage[paperwidth=34cm, paperheight=20cm, margin=0.6cm]{geometry}
+\pagestyle{empty}
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{xeCJK}
+\usepackage{amsmath,amssymb}
+\usepackage{newunicodechar}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, backgrounds, calc, fit}
+
+\definecolor{accentcolor}{HTML}{B32F17}
+\definecolor{accentlight}{HTML}{D9836F}
+\definecolor{ink}{HTML}{1A1A1A}
+\definecolor{muted}{HTML}{5A5A5A}
+\definecolor{calloutbg}{HTML}{FBF1EE}
+\definecolor{loopbg}{HTML}{F7E9E4}
+
+\providecommand{\DiagramCJKRegular}{FandolSong-Regular.otf}
+\providecommand{\DiagramCJKBold}{FandolSong-Bold.otf}
+\providecommand{\DiagramMonoFont}{lmmono10-regular.otf}
+\setCJKmainfont{\DiagramCJKRegular}[BoldFont=\DiagramCJKBold]
+\setCJKmonofont{\DiagramCJKRegular}
+\setmonofont{\DiagramMonoFont}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↑}{\ensuremath{\uparrow}}
+\newunicodechar{→}{\ensuremath{\rightarrow}}
+\newunicodechar{↓}{\ensuremath{\downarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⇄}{\ensuremath{\rightleftarrows}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+
+\makeatletter
+\renewcommand\footnotesize{\@setfontsize\footnotesize{9pt}{11pt}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{8pt}{9.6pt}}
+\makeatother
+
+\begin{document}
+\centering
+\begin{tikzpicture}[
+  x=1cm, y=1cm, font=\normalsize, text=ink, >={Stealth[length=2.8mm]},
+  svc/.style    ={draw=accentcolor, line width=1.1pt, rounded corners=3pt, fill=white, align=center, inner sep=6pt},
+  core/.style   ={draw=accentcolor, line width=1.3pt, rounded corners=4pt, fill=calloutbg, align=center, inner sep=7pt},
+  aux/.style    ={draw=accentlight, line width=1pt, rounded corners=3pt, fill=white, align=center, inner sep=5pt, text=ink},
+  opt/.style    ={draw=accentlight, line width=1pt, rounded corners=3pt, dashed, fill=white, align=center, inner sep=5pt, text=ink},
+  fl/.style     ={->, draw=accentcolor, line width=1.15pt},
+  biarr/.style  ={<->, draw=accentcolor, line width=1.15pt},
+  ret/.style    ={->, draw=accentlight, line width=1.2pt},
+  retbi/.style  ={<->, draw=accentlight, line width=1.2pt},
+  dashfl/.style ={->, draw=accentlight, line width=1.05pt, dashed},
+  dashbi/.style ={<->, draw=accentlight, line width=1.05pt, dashed},
+  lbl/.style    ={font=\small\bfseries, text=ink, fill=white, inner sep=1.8pt},
+  retlbl/.style ={font=\small\bfseries, text=accentcolor, fill=white, inner sep=1.8pt},
+]
+\path[use as bounding box] (-15,0.8) rectangle (15,-14.5);
+
+\node[anchor=west, font=\fontsize{20}{24}\selectfont\bfseries] at (-14.5,0) {System Architecture};
+\node[anchor=west, font=\footnotesize, text=muted] at (-14.4,-0.7)
+  {Current-state ownership, control flow, provider seams, and durability};
+
+\node[svc, text width=38mm] (client) at (-12,-4)
+  {\textbf{Client}\\\footnotesize Web UI \textperiodcentered{} CLI};
+\node[svc, text width=42mm] (api) at (-5,-4)
+  {\textbf{API Boundary}\\\footnotesize authenticate \textperiodcentered{} validate};
+\node[core, text width=45mm] (runtime) at (1.5,-4)
+  {\textbf{Core Runtime}\\\footnotesize owns control and state};
+\node[svc, text width=42mm] (provider) at (11.5,-4)
+  {\textbf{External Provider}\\\footnotesize remote API};
+\node[opt, text width=42mm] (optional) at (5,-8)
+  {\textbf{Optional Adapter}\\\footnotesize shipped\\\footnotesize deployment opt-in};
+\node[core, text width=58mm] (store) at (1.5,-11.5)
+  {\textbf{Durable Store}\\\footnotesize journal \textperiodcentered{} snapshots\\\footnotesize projection};
+
+\begin{scope}[on background layer]
+  \node[fill=loopbg, draw=accentlight, line width=1pt, rounded corners=8pt,
+        fit=(api)(runtime)(optional), inner xsep=16pt, inner ysep=18pt] (systembox) {};
+\end{scope}
+\node[font=\small\bfseries, text=accentcolor, anchor=south west]
+  at ([xshift=6pt,yshift=7pt]systembox.south west) {System Boundary};
+
+\draw[fl] (client) -- (api) node[lbl, midway] {1. request};
+\draw[fl] (api) -- (runtime) node[lbl, midway] {2. 准入};
+\draw[biarr] (runtime) -- (provider) node[lbl, midway] {provider API};
+\draw[dashbi] (runtime.south east) to[out=-25,in=150]
+  node[retlbl, pos=0.55] {optional capability} (optional.north west);
+\draw[retbi] (runtime.south) to[out=-90,in=90]
+  node[retlbl, midway] {持久化 / 恢复} (store.north);
+\draw[ret] (runtime.north) .. controls (1,-1.7) and (-10,-1.7) ..
+  node[retlbl, above, pos=0.52] {event stream} (client.north);
+
+\end{tikzpicture}
+\end{document}
