@@ -18,6 +18,11 @@ for name in $names; do
   [ -f "$repo/skills/$name/SKILL.md" ] || { echo "missing skill in clone: $name" >&2; exit 1; }
 done
 
+# Moving an entry leaves its slot empty: this script never installs the replacement
+# link. Run the machine activation (ee / nix-rebuild) in the same window, or those
+# skills stay invisible on this host until you do.
+echo "warning: moved entries are not replaced here; run the machine activation immediately after." >&2
+
 backup="$HOME/.local/share/agent-skills-backup-$(date +%Y%m%d-%H%M%S)"
 moved=0
 
@@ -50,7 +55,7 @@ done
 
 if [ "$moved" -eq 0 ]; then
   rm -rf "$backup"
-  echo "nothing to move; slots already point into $repo/skills"
+  echo "nothing to move; no conflicting entries under $HOME/.agents/skills or $HOME/.claude/skills"
 else
   echo "moved $moved entr(y/ies) to $backup"
   echo "verify the backup, then re-run the machine activation"

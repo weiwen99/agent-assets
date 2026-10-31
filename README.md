@@ -26,11 +26,13 @@ ln -s ~/projects/agent-assets/skills/<name> ~/.agents/skills/<name>
 ln -s ~/projects/agent-assets/skills/<name> ~/.claude/skills/<name>   # Claude Code
 ```
 
-槽位上已有手工拷贝时，先跑一次迁移：它把要替换的条目移进带时间戳的备份目录（`agents/`、`claude/` 分开放），已经指向本仓的链接原样保留，遇到既不是目录也不是链接的东西立即停下：
+槽位上已有手工拷贝时，要先跑一次迁移：它把要替换的条目移进带时间戳的备份目录（`agents/`、`claude/` 分开放），已经指向本仓的链接原样保留，遇到既不是目录也不是链接的东西立即停下。
 
 ```bash
 scripts/adopt-local-slots.sh ~/projects/agent-assets
 ```
+
+**迁移本身不装替代链接**，所以它必须和「机器激活」（home-manager / `ee` / `nix-rebuild`）放在同一个窗口里连续做完；在激活完成前，被移走的那几个 skill 在这台机上不可见。clone 本身随时可做，没有这个窗口问题。
 
 本仓不提供 Nix/home-manager module。机器侧的槽位由私有机器配置仓声明为指向本仓工作树的活链接，见 `docs/adr/0001`。
 
