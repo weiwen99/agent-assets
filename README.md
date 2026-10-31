@@ -1,6 +1,6 @@
 # agent-assets
 
-魏文（weiwen99）自用的 AI agent skill 集合。每个 skill 是一个独立目录 `skills/<name>/SKILL.md`，被 omp、Claude Code、Codex、pi 等按目录发现的 agent 直接读取。
+weiwen99 自用的 AI agent skill 集合。每个 skill 是一个独立目录 `skills/<name>/SKILL.md`，被 omp、Claude Code、Codex、pi 等按目录发现的 agent 直接读取。
 
 ## 内容
 
