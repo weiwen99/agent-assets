@@ -23,7 +23,12 @@ done
 # skills stay invisible on this host until you do.
 echo "warning: moved entries are not replaced here; run the machine activation immediately after." >&2
 
-backup="$HOME/.local/share/agent-skills-backup-$(date +%Y%m%d-%H%M%S)"
+state="$HOME/.local/share"
+mkdir -p "$state"
+# mktemp -d gives this run an exclusive directory: a second run in the same second
+# cannot reuse the name, so its "nothing to move" cleanup can never delete a
+# previous run's backup.
+backup=$(mktemp -d "$state/agent-skills-backup-$(date +%Y%m%d-%H%M%S)-XXXXXX")
 moved=0
 
 for slot in agents claude; do
@@ -54,7 +59,7 @@ for slot in agents claude; do
 done
 
 if [ "$moved" -eq 0 ]; then
-  rm -rf "$backup"
+  rmdir "$backup" 2>/dev/null || true
   echo "nothing to move; no conflicting entries under $HOME/.agents/skills or $HOME/.claude/skills"
 else
   echo "moved $moved entr(y/ies) to $backup"
