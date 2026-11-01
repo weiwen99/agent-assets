@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SVG color-scheme regression</title>
+  <style>
+    body { margin: 0; font: 16px/1.5 sans-serif; }
+    header { padding: 1rem; background: white; color: #202020; }
+    .case { --paper: #fafaf7; --ink: #202020; padding: 16px; background: var(--paper); color: var(--ink); }
+    .case h2 { margin: 0 0 16px; font-size: 18px; }
+    .case img { display: block; width: 640px; max-width: 100%; height: auto; }
+    .case a { color: inherit; }
+    img.theme-aware { color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) {
+      .case[data-theme="auto"] { --paper: #1f1e1c; --ink: #e8e5e0; }
+    }
+    .case[data-theme="light"] { --paper: #ffffff; --ink: #202020; }
+    .case[data-theme="dark"] { --paper: #121216; --ink: #e8e5e0; }
+    .case[data-theme="light"] img.theme-aware { color-scheme: light; }
+    .case[data-theme="dark"] img.theme-aware { color-scheme: dark; }
+    @media print {
+      header { display: none; }
+      .case[data-theme] { --paper: #ffffff; --ink: #202020; break-inside: avoid; }
+      .case[data-theme] img.theme-aware { color-scheme: light; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SVG theme regression</h1>
+    <p>Change the browser or OS color preference; inspect all three panels, the
+      standalone SVG and print preview. No script changes the SVG.</p>
+  </header>
+  <section class="case" data-theme="auto">
+    <h2>Auto: follows the system</h2>
+    <img class="theme-aware" src="theme-aware.svg" alt="Theme fixture: arrow, transparent label gap, hollow point and pale fills">
+    <p><a href="theme-aware.svg">Open standalone SVG</a></p>
+  </section>
+  <section class="case" data-theme="light">
+    <h2>Forced light: must stay light even when the system is dark</h2>
+    <img class="theme-aware" src="theme-aware.svg" alt="Same fixture in a light container">
+  </section>
+  <section class="case" data-theme="dark">
+    <h2>Forced dark: must stay dark even when the system is light</h2>
+    <img class="theme-aware" src="theme-aware.svg" alt="Same fixture in a dark container">
+  </section>
+</body>
+</html>

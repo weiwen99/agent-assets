@@ -1,0 +1,3 @@
+interface:
+  display_name: "SVG Web Delivery"
+  short_description: "Deliver fixed or theme-adaptive SVGs with verified occlusion and print"

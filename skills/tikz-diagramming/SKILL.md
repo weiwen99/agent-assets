@@ -7,7 +7,16 @@ description: Draw or revise LaTeX TikZ architecture, business-flow, logic, and d
 
 Produce an evidence-backed technical diagram with editable TikZ source, vector PDF, a self-contained SVG, and a sharp web-ready PNG. Preserve semantic detail unless the user explicitly asks for a simplified view.
 
-## Process
+## 前置
+
+Settle the destination before composing; it fixes the copy of record and whether a web derivative exists.
+
+- **Fixed surface.** The white-page master serves every destination that renders SVG — browser, HTML `<img>`, GitHub's SVG preview, an org or HTML document, a host known to render SVG but with an unknown page background. Fall back only for a destination that cannot take SVG: `.png` for a raster-only slot (chat attachments, slide tools, image viewers, trackers that strip SVG) or a fixed pixel width; `.pdf` for print, LaTeX, or a vector-page pipeline; `.webp` as a smaller lossless raster that never stands as the only copy. A fixed white delivery stays legitimate when the surrounding page is HTML, and it needs no adaptation.
+- **Adaptive web.** On an explicit request for a light/dark adaptive HTML delivery, the derivative is authored on top of the master; load the sibling [svg-web-delivery](../svg-web-delivery/SKILL.md) skill in full first. It owns color-scheme signalling, in-figure palette roles, transparent occlusion, print restoration, and real-host checks.
+- **Dependency.** If that sibling directory is absent, clone the whole public repository `https://github.com/weiwen99/agent-assets` into a writable workspace so same-root references and fixtures come along, record the resolved commit (`git -C <clone> rev-parse HEAD`) in the delivery notes, then load `skills/svg-web-delivery/SKILL.md` together with every reference and fixture that branch names.
+- **Two records.** The `.tex` stays the editable source of record and the white-page SVG the visual master, whatever the derivative adds.
+
+## 步骤
 
 ### 1. Ground the diagram
 
@@ -22,7 +31,7 @@ Read authoritative code, configuration, domain vocabulary, and current design ma
 
 Read [semantic and layout checks](references/semantic-layout-checks.md) before placing nodes.
 
-**Done when:** every intended visible node and edge has one meaning, owner, status, and source.
+完成条件：every intended visible node and edge has one meaning, owner, status, and source; the destination and fixed/adaptive branch are recorded, and the adaptive dependency is loaded before composition.
 
 ### 2. Choose the composition
 
@@ -33,7 +42,7 @@ Read [the visual system](references/visual-system.md). Copy the closest file fro
 
 Retain all grounded content. Resolve density by widening the page, adding space, or splitting only when the user approves a second diagram. Do not shrink essential text below the visual-system floor.
 
-**Done when:** the picture has one reading direction, one dominant path, and enough space for the complete ledger.
+完成条件：the picture has one reading direction, one dominant path, and enough space for the complete ledger.
 
 ### 3. Use portable fonts
 
@@ -46,7 +55,7 @@ A project may explicitly replace the three font macros. Never add a silent syste
 
 Read [the rendering pipeline](references/rendering-pipeline.md) before the first render.
 
-**Done when:** the selected font files are explicit and embeddable, or the renderer has failed with an actionable missing-package message.
+完成条件：the selected font files are explicit and embeddable, or the renderer has failed with an actionable missing-package message.
 
 ### 4. Draw with named styles
 
@@ -54,7 +63,7 @@ Use the shared styles from the template rather than one-off formatting: `svc`, `
 
 Place nodes before routing edges. Keep core-owned components inside the core boundary and external providers outside. Route primary flow directly; use broad pale-red arcs for feedback, recovery, and event return. Give labels opaque white backplates. Move geometry until no path enters an unrelated node or crosses text.
 
-**Done when:** every ledger item is represented and each line style has one declared meaning.
+完成条件：every ledger item is represented and each line style has one declared meaning.
 
 ### 5. Render trusted source through vectors
 
@@ -82,7 +91,7 @@ The delivered `.svg` is that same dvisvgm output with an explicit white page rec
 
 The renderer rejects unacknowledged input, missing tools/fonts, process timeouts, TeX errors, overfull boxes, missing glyph warnings, multi-page PDFs, malformed output, wrong PNG width/color type, and a non-white page corner. It keeps `.tex`, `.pdf`, `.svg`, and `.png` (plus `.webp` with `--webp`); other intermediates stay in a temporary directory.
 
-**Done when:** the renderer exits zero, reports exactly one page, validates an RGB PNG, and the delivered SVG carries the white page rect.
+完成条件：the renderer exits zero, reports exactly one page, validates an RGB PNG, and the delivered SVG carries the white page rect.
 
 ### 6. Inspect both delivery scales
 
@@ -94,24 +103,16 @@ Inspect the actual artifacts, not just source:
 
 Then compare the final visible node/edge inventory with the grounded ledger. Fix clipping, ownership errors, status mismatches, ambiguous endpoints, semantic shortcuts, and typography below the floor. Re-render after every font or geometry change.
 
-**Done when:** native raster and browser-fit checks pass, and every ledger item remains present.
+完成条件：native raster and browser-fit checks pass, and every ledger item remains present.
 
-### 7. Deliver and clean
+### 7. 交接
 
-Deliver `.tex`, `.pdf`, `.svg`, and `.png` under a collision-free stem; add `.webp` when the raster is going to a host that prefers it. Keep prior diagram variants unless replacement was explicitly requested. Remove `.aux`, `.log`, `.xdv`, screenshots, and trial renders.
+Retain `.tex`, `.pdf`, `.svg`, and `.png` under a collision-free stem, then hand over the format chosen for each destination; add `.webp` when the raster is going to a host that prefers it. Keep prior diagram variants unless replacement was explicitly requested. Remove `.aux`, `.log`, `.xdv`, screenshots, and trial renders.
 
-**Done when:** all delivered files exist under one stem, the SVG and PNG show the same diagram, and no temporary artifact is left in the project.
+Name the destination of every delivered file as chosen in 前置, and hand the fixed-surface master over as the copy of record. When the destination is an adaptive web page, the handoff carries the white-page master plus the shared [svg-web-delivery](../svg-web-delivery/SKILL.md) rules into the derivative work, reports which files are fixed-surface and which are web derivatives, and leaves the shared skill's real-host and theme checks with that skill.
 
-### 8. Pick the artifact for the destination
+完成条件：all delivered files exist under one stem, the SVG and PNG show the same diagram, no temporary artifact is left in the project, every file has a named destination, and the fixed-surface master is retained alongside any web derivative.
 
-Default to the `.svg`: it is the same drawing at any zoom and, with the white page rect, stays red-on-white in light and dark viewers. Use it wherever the target renders SVG — a browser, an HTML `<img>`, GitHub's SVG preview, an org or HTML document.
+## 边界
 
-Fall back only when the destination cannot take SVG:
-
-1. `.png` when the slot only accepts a raster (chat attachments, slide tools, image viewers, trackers that strip SVG) or when a fixed pixel width is required.
-2. `.pdf` when the destination is print, LaTeX, or a document pipeline that embeds vector pages.
-3. `.webp` only for a web payload that wants a smaller lossless raster; never as the only copy.
-
-The white page rect fixes dark-mode backgrounds, not a missing SVG renderer: do not hand over an SVG to a consumer that cannot render it.
-
-**Done when:** every delivered file has a named destination, and the format handed over is the first one that destination actually renders.
+Scope is TikZ/LaTeX diagrams in the red/rose core-dataflow system up to delivery; Inkscape and native-SVG requests route to `inkscape-diagramming`, and web delivery follows the shared `svg-web-delivery` skill. The fixed white master keeps its explicit white page rect and opaque label backplates; a web derivative varies page and plates by semantic role under the shared occlusion rules, which clear earlier paint and keep text drawn later. The renderer keeps its white-corner, page-count, PNG-width, and RGB gates, trusted-input acknowledgment stays mandatory, and no new package is introduced. Publishing, deploying, and editing a host site remain the host owner's authority; the shared skill's real-host check runs against an authorized URL and is recorded as pending verification when none exists. Semantic completeness outranks visual tidiness, so simplification happens only on explicit request.

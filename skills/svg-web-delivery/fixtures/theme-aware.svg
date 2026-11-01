@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+     width="640" height="360" viewBox="0 0 640 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">Theme-aware SVG regression fixture</title>
+  <desc id="desc">An arrow interrupted by a transparent label, a hollow point,
+    a pale panel and a fading strip. Geometry is identical in both themes.</desc>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --ink: #202020;
+      --muted: #545454;
+      --accent: #444444;
+      --surface: #202020;
+      --wash-alpha: 0.08;
+    }
+    text { font-family: sans-serif; font-size: 20px; fill: var(--ink); }
+    .title { font-size: 28px; font-weight: bold; }
+    .note { font-size: 16px; fill: var(--muted); }
+    .line { fill: none; stroke: var(--ink); stroke-width: 3; }
+    .guide { fill: none; stroke: var(--muted); stroke-width: 2; }
+    .arrow-fill { fill: var(--accent); }
+    .wash { fill: var(--surface); fill-opacity: var(--wash-alpha); }
+    .fade-stop { stop-color: var(--surface); }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #e8e5e0;
+        --muted: #b2ada4;
+        --accent: #d3cfc8;
+        --surface: #e8e5e0;
+        --wash-alpha: 0.10;
+      }
+    }
+    @media print {
+      :root {
+        color-scheme: light;
+        --ink: #202020;
+        --muted: #545454;
+        --accent: #444444;
+        --surface: #202020;
+        --wash-alpha: 0.08;
+      }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 12 12" refX="11" refY="6"
+            markerWidth="12" markerHeight="12" orient="auto"
+            markerUnits="userSpaceOnUse">
+      <path class="arrow-fill" d="M0 0 L12 6 L0 12 L3 6 Z"/>
+    </marker>
+    <linearGradient id="fade" x1="0" y1="1" x2="0" y2="0">
+      <stop class="fade-stop" offset="0" stop-opacity="0.12"/>
+      <stop class="fade-stop" offset="1" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="knockouts" mask-type="luminance"
+          maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse"
+          x="0" y="0" width="640" height="360">
+      <rect x="0" y="0" width="640" height="360" fill="white"/>
+      <rect id="label-hole" x="268" y="166" width="104" height="48" fill="black"/>
+      <circle id="point-hole" cx="492" cy="252" r="9" fill="black"/>
+    </mask>
+  </defs>
+  <!-- Empty Canvas is deliberate: no painted page rectangle. -->
+  <g inkscape:groupmode="layer" inkscape:label="Canvas" id="canvas"/>
+  <g id="early-paint" mask="url(#knockouts)">
+    <g inkscape:groupmode="layer" inkscape:label="Panels" id="panels">
+      <rect class="wash" x="40" y="144" width="560" height="152" rx="8"/>
+      <rect id="fade-strip" x="40" y="112" width="560" height="32" fill="url(#fade)"/>
+    </g>
+    <g inkscape:groupmode="layer" inkscape:label="Connectors" id="connectors">
+      <path id="main-line" class="line" d="M80 190 H560" marker-end="url(#arrow)"/>
+      <path id="axis" class="guide" d="M80 252 H560"/>
+    </g>
+  </g>
+  <g inkscape:groupmode="layer" inkscape:label="Nodes" id="nodes">
+    <circle id="open-point" class="guide" cx="492" cy="252" r="9"/>
+  </g>
+  <g inkscape:groupmode="layer" inkscape:label="Labels" id="labels">
+    <text class="title" x="24" y="42">Theme-aware SVG</text>
+    <text class="note" x="24" y="76">Text, arrow fill, knockout, hollow point, fade</text>
+    <text id="later-label" x="320" y="198" text-anchor="middle">label</text>
+    <text class="note" x="80" y="278">axis</text>
+    <text class="note" x="492" y="324" text-anchor="middle">hollow point</text>
+  </g>
+</svg>

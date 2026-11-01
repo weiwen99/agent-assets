@@ -7,7 +7,16 @@ description: Draw or revise architecture diagrams, business flowcharts, logic di
 
 Produce an evidence-backed diagram, not decorated prose. The visual language is monochrome, flat, spacious, and intentionally hand-composed: serif labels, sharp rectangles, light-gray fills, black ink, and direct arrows.
 
-## Process
+## 前置
+
+Settle the destination before a layout recipe is chosen; it fixes the copy of record and whether a themed derivative exists.
+
+- **Fixed surface.** The white-page SVG is the master and the editable copy of record: it renders at any zoom in a browser, an HTML `<img>`, GitHub's SVG preview, an org or HTML document, a later Inkscape edit, or a host known to render SVG but with an unknown page background. Use `.png` only for a slot that accepts nothing else (chat attachments, slide tools, image viewers, hosts that strip SVG); the raster always comes from the same SVG at 2×, is never upscaled, and never stands in for an available SVG. A fixed white delivery stays legitimate when the surrounding page is HTML, and it needs no adaptation.
+- **Adaptive web.** On an explicit request for a light/dark adaptive HTML delivery, the derivative is authored on top of the master; load the sibling [svg-web-delivery](../svg-web-delivery/SKILL.md) skill in full first. It owns color-scheme signalling, in-figure palette roles, transparent occlusion, print restoration, and real-host checks.
+- **Dependency.** If that sibling directory is absent, clone the whole public repository `https://github.com/weiwen99/agent-assets` into a writable workspace so same-root references and fixtures come along, record the resolved commit (`git -C <clone> rev-parse HEAD`) in the delivery notes, then load `skills/svg-web-delivery/SKILL.md` together with every reference and fixture that branch names.
+- **Editable form.** The derivative adapts a copy: live `<text>`, the named layers, stable group IDs, and one shared arrow marker per direction survive; marker and light-region fills are recoloured by semantic role, never converted to paths.
+
+## 步骤
 
 ### 1. Ground the semantic map
 
@@ -21,7 +30,7 @@ Read the authoritative code, configuration, and current design material before d
 
 For a current-state plate, use solid treatment for active core, dashed treatment for shipped deployment-opt-in elements, and omit proposals. Never infer deployment activation from the existence of code.
 
-**Done when:** every visible node and connection has a defined meaning and status, and adjacent abstraction levels have been removed.
+完成条件：every visible node and connection has a defined meaning and status, and adjacent abstraction levels have been removed; the destination and fixed/adaptive branch are recorded, and the adaptive dependency is loaded before composition.
 
 ### 2. Select one layout recipe
 
@@ -33,7 +42,7 @@ Read [the visual system](references/visual-system.md), then choose the matching 
 
 Copy the corresponding file in `templates/`; keep its viewBox, CSS tokens, definitions, and layer order. Adapt the canvas only when the content cannot remain legible at the template ratio.
 
-**Done when:** the diagram has one declared viewpoint, one reading direction, and one dominant path.
+完成条件：the diagram has one declared viewpoint, one reading direction, and one dominant path.
 
 ### 3. Compose before connecting
 
@@ -47,7 +56,7 @@ Place title, boundaries, nodes, and terminal states first. Use a consistent grid
 
 Keep connectors behind nodes. Put edge labels in the label layer with a white backplate. Move geometry until no connector crosses text, clips an arrowhead, or enters an unrelated node.
 
-**Done when:** the primary path is readable without tracing crossings and every secondary path is visibly subordinate.
+完成条件：the primary path is readable without tracing crossings and every secondary path is visibly subordinate.
 
 ### 4. Author an editable SVG
 
@@ -55,7 +64,7 @@ Use live `<text>` and ordinary SVG primitives. Preserve the named Inkscape layer
 
 Use the explicit white page rectangle. This preserves black ink in browsers and dark image viewers while keeping the output visually identical to the original references on white.
 
-**Done when:** the SVG opens as XML, remains editable in Inkscape, and contains no rasterized text or accidental editor residue.
+完成条件：the SVG opens as XML, remains editable in Inkscape, and contains no rasterized text or accidental editor residue.
 
 ### 5. Render and inspect the actual image
 
@@ -69,18 +78,22 @@ The default scale is 2×. Inspect the PNG itself on white. Check title and label
 
 For semantic verification, compare the final node/edge inventory against the grounded map. A beautiful missing edge is still wrong.
 
-**Done when:** Inkscape exports successfully, visual inspection finds no overlap or clipping, and the final inventory accounts for every intended node and edge.
+完成条件：Inkscape exports successfully, visual inspection finds no overlap or clipping, and the final inventory accounts for every intended node and edge.
 
 ### 6. Deliver the pair
 
-Deliver both the editable `.svg` and rendered `.png`. State the viewpoint and any important omissions. Keep temporary composites or experimental renders out of the project.
+Keep both the editable `.svg` and rendered `.png` as the delivery set; hand over the selected format for each destination. State the viewpoint and any important omissions. Keep temporary composites or experimental renders out of the project.
 
-**Done when:** both files exist under one stem, the SVG still opens as editable XML, and the PNG was rendered from that same SVG.
+完成条件：both files exist under one stem, the SVG still opens as editable XML, and the PNG was rendered from that same SVG.
 
-### 7. Pick the artifact for the destination
+### 7. 交接
 
-Default to the `.svg`: it is the editable copy of record and the same drawing at any zoom, and the explicit white page keeps it legible in light and dark viewers. Use it wherever the target renders SVG — a browser, an HTML `<img>`, GitHub's SVG preview, an org or HTML document, or a later edit in Inkscape.
+Hand over the pair against the destination chosen in 前置: the `.svg` stays the copy of record and every delivered file gets its destination named, while the editable SVG remains the starting point for any later revision.
 
-Use the `.png` only when the slot accepts a raster: chat attachments, slide tools, image viewers, or a host that strips SVG. The raster always comes from the same SVG (2× by default); never upscale the PNG when the SVG is available.
+When the destination is an adaptive web page, the handoff carries that editable SVG plus the shared [svg-web-delivery](../svg-web-delivery/SKILL.md) rules into the derivative work, reports which files are fixed-surface and which are web derivatives, and leaves the shared skill's real-host and theme checks with that skill.
 
-**Done when:** the format handed over is the first one the destination actually renders, and the SVG remains the copy of record.
+完成条件：the format handed over is the first one the destination actually renders, the SVG remains the copy of record, every delivered file has a named destination, and an adaptive derivative is handed off with the shared web skill's rules applied.
+
+## 边界
+
+Scope is monochrome Inkscape/native-SVG diagrams up to delivery; TikZ and LaTeX requests route to `tikz-diagramming`, and web delivery follows the shared `svg-web-delivery` skill. The fixed white master keeps its explicit white page rectangle and label backplates; a web derivative varies page and plates by semantic role under the shared occlusion rules, which clear earlier paint and keep text drawn later. `<text>` stays live, the named layers, stable IDs, and shared arrow markers stay intact, and recolouring happens through attributes and CSS custom properties on the same editable drawing; a mask that needs a wrapper group may add one around existing content. `scripts/render-svg.sh`, the 2× default, and the template viewBox and layer order stay as they are, and no new package is introduced. Publishing, deploying, and editing a host site remain the host owner's authority; the shared skill's real-host check runs against an authorized URL and is recorded as pending verification when none exists.
