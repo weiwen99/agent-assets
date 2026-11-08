@@ -28,10 +28,11 @@ A restrained red/rose technical poster: serif text, rounded red boxes, pale rose
 \providecommand{\DiagramCJKRegular}{FandolSong-Regular.otf}
 \providecommand{\DiagramCJKBold}{FandolSong-Bold.otf}
 \providecommand{\DiagramMonoFont}{lmmono10-regular.otf}
+\providecommand{\DiagramMonoBold}{lmmonolt10-bold.otf}
 
 \setCJKmainfont{\DiagramCJKRegular}[BoldFont=\DiagramCJKBold]
-\setCJKmonofont{\DiagramCJKRegular}
-\setmonofont{\DiagramMonoFont}
+\setCJKmonofont{\DiagramCJKRegular}[BoldFont=\DiagramCJKBold]
+\setmonofont{\DiagramMonoFont}[BoldFont=\DiagramMonoBold]
 ```
 
 Map commonly used Unicode arrows to TeX math glyphs instead of assigning U+2190–21FF to the CJK font; Fandol intentionally lacks several arrows:
@@ -48,7 +49,21 @@ Map commonly used Unicode arrows to TeX math glyphs instead of assigning U+2190�
 \newunicodechar{⇒}{\ensuremath{\Rightarrow}}
 ```
 
-These are TeX package files, not host font-family names. An explicit project override may redefine the three macros before these commands. Do not search for a visually similar operating-system fallback.
+These are TeX package files, not host font-family names. An explicit project override may redefine the four macros before these commands. Do not search for a visually similar operating-system fallback.
+
+## Font roles
+
+Serif carries prose: Chinese text, English words used as words, and numbers that state a quantity (`19 tools`, `37 ADRs`). Mono marks text a reader would copy verbatim or whose spelling is fixed: command signatures and their placeholders, flags, file names, table and field names, literal exit codes. Set the token itself with `\texttt{...}` and keep the surrounding prose outside it.
+
+The two faces are not the same size. Measured with `\settowidth`/`\settoheight` at 11 pt on the shipped files: cap height 7.48 pt for `lmroman10-regular` against 6.69 pt for `lmmono10-regular` (about 11 % lower), and the 16-character string `0x1-cli <domain>` 87.30 pt against 91.98 pt (about 5.4 % wider). A line measured for the serif therefore overflows once part of it turns mono, and a mono line looks lighter than its neighbors. Re-measure the node or re-wrap; never drop below the type floor to make it fit.
+
+`\setCJKmonofont` maps CJK to FandolSong, so a Chinese run inside `\texttt` is not visually mono. Keep the tokens that must read as identifiers in ASCII; a Chinese identifier stays serif and the signal does not appear.
+
+Latin Modern Mono ships no bold, and `lmmonolt10-bold.otf` is the bold of Latin Modern Mono *Light*, so a bold mono token still sits lighter than bold serif. Inside a bold node title or edge label, wrap the token as `{\normalfont\texttt{...}}`; the declared `BoldFont` exists so nothing degrades silently, not as a license to bold mono. See [the rendering pipeline](rendering-pipeline.md) for the log symptom and the render gate.
+
+Fandol ships no italic either, so `\emph` or `\textit` on Chinese substitutes upright and now fails the render. Carry emphasis with weight, borders, or fill instead.
+
+Never set a whole plate in mono. The serif/mono contrast is what marks an identifier as an identifier; a plate set entirely in mono reads as a terminal capture and loses that signal.
 
 ## Type floor
 

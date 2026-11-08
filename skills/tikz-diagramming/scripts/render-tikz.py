@@ -18,6 +18,7 @@ DEFAULT_FONT_FILES = (
     "FandolSong-Regular.otf",
     "FandolSong-Bold.otf",
     "lmmono10-regular.otf",
+    "lmmonolt10-bold.otf",
 )
 REQUIRED_TEX_FILES = (
     ("geometry.sty", "geometry"),
@@ -176,6 +177,23 @@ def validate_tex_log(log_file: Path) -> None:
             65,
             "TeX dropped one or more glyphs; configure an explicit font containing them:\n"
             + "\n".join(missing_characters),
+        )
+
+    # TeX wraps long warnings at 79 columns, so match on the flattened log and
+    # split it back into warnings instead of assuming "Font shape" and
+    # "undefined" share a physical line.
+    flattened_log = " ".join(log_text.split())
+    font_shape_warnings = [
+        chunk.strip()
+        for chunk in re.split(r"(?=LaTeX Font Warning:)", flattened_log)
+        if "Font shape" in chunk and "undefined" in chunk
+    ]
+    if font_shape_warnings:
+        raise RenderFailure(
+            65,
+            "TeX silently substituted a font shape. Declare the missing face "
+            "(bold mono needs BoldFont=...), or drop markup the family cannot "
+            "provide (Fandol ships no italic):\n" + "\n".join(font_shape_warnings),
         )
 
     compact_log = re.sub(r"\s+", "", log_text)

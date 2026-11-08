@@ -16,6 +16,7 @@ The source references contained transparent page margins. This system uses an ex
 | Architecture component fill | `#e5e5e5` |
 | System boundary fill | `#f3f3f3` |
 | Typeface | `Noto Serif CJK SC`, then `Noto Serif`, then `serif` |
+| Identifier typeface | `Noto Sans Mono CJK SC` |
 | Weight/style | Regular, upright |
 | Corners | Square; radius `0` |
 | Effects | Flat; no shadow or gradient |
@@ -67,6 +68,18 @@ A dashed border or connector means **implemented and shipped, but deployment-opt
 - Legend/footnote: 16–18 px.
 
 Center node labels. Keep titles and explanatory notes left-aligned. Prefer two deliberately spaced lines over shrinking important text below 16 px.
+
+### Font roles
+
+Serif carries prose, including numbers that state a quantity (`19 tools`, `37 ADRs`). Mono marks text a reader would copy verbatim or whose spelling is fixed: command signatures and their placeholders, flags, file names, table and field names, literal exit codes.
+
+The templates ship the token for it: `.code { font-family:"Noto Sans Mono CJK SC","Noto Sans Mono",monospace; }`. Put `class="code"` on the label, next to `node-meta` or `edge-label`, or on a `<tspan class="code">` when only one token inside a serif label changes face. Do not write a second font stack.
+
+Keep mono at weight 400. Hierarchy in this system comes from geometry and density, so a bolded token would be the only bold object on the plate. `Noto Sans Mono CJK SC` covers ASCII and Chinese in one family, but CJK glyphs stay full-width, so a mixed identifier is wider than the same number of Latin characters. Turning a label into an identifier therefore changes its advance width: re-center or re-measure it instead of letting the text drift out of its box.
+
+Confirm the face before authoring: `fc-match "Noto Sans Mono CJK SC"` must echo that family. Then confirm the class actually applied by measuring one narrow-letter string (`iiiiiiiiii`) in both faces with `inkscape --query-width` at the same size: Noto Serif gives about 77.8 px against Noto Sans Mono about 111.1 px at 24 px, so a `code` run that is not clearly wider means the class did not apply. A different family from `fc-match`, or two identical widths, blocks the plate — `render-svg.sh` only proves the PNG is non-empty, so these checks are the evidence. Do not use arbitrary identifiers as the probe: mono is often *narrower* than serif for mixed strings, so width direction alone is not a test.
+
+A plate set entirely in mono loses the contrast that marks an identifier.
 
 ## Layer order
 

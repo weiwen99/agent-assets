@@ -42,20 +42,20 @@ Read [the visual system](references/visual-system.md). Copy the closest file fro
 
 Retain all grounded content. Resolve density by widening the page, adding space, or splitting only when the user approves a second diagram. Do not shrink essential text below the visual-system floor.
 
-完成条件：the picture has one reading direction, one dominant path, and enough space for the complete ledger.
+完成条件：the picture has one reading direction, one dominant path, and enough space for the complete ledger; no text run is set in mono unless it is an identifier per the font roles.
 
 ### 3. Use portable fonts
 
 Use the template’s TeX-distributed static fonts. They are located by TeX/Kpathsea, not by operating-system font discovery. The default contract is:
 
 - `FandolSong-Regular.otf` and `FandolSong-Bold.otf` from the `fandol` TeX package;
-- `lmmono10-regular.otf` from the `lm` TeX package.
+- `lmmono10-regular.otf` and `lmmonolt10-bold.otf` from the `lm` TeX package.
 
-A project may explicitly replace the three font macros. Never add a silent system-font fallback: changed metrics change wrapping and geometry. A font override requires a fresh compile and both visual checks in step 6.
+A project may explicitly replace the four font macros. Never add a silent system-font fallback: changed metrics change wrapping and geometry. A font override requires a fresh compile and both visual checks in step 6.
 
 Read [the rendering pipeline](references/rendering-pipeline.md) before the first render.
 
-完成条件：the selected font files are explicit and embeddable, or the renderer has failed with an actionable missing-package message.
+完成条件：the selected font files are explicit and embeddable; every identifier run uses the mono family without overflowing its node; or the renderer has failed with an actionable message.
 
 ### 4. Draw with named styles
 
@@ -89,7 +89,7 @@ XeLaTeX -no-shell-escape → one-page vector PDF → dvisvgm vector SVG → Inks
 
 The delivered `.svg` is that same dvisvgm output with an explicit white page rect prepended, so it stays red-on-white in browsers and dark image viewers. `--no-fonts` turns glyphs into paths: the SVG is self-contained (no font dependency) but **not** text-editable — the editable source is the `.tex`. `--webp` additionally converts the validated PNG to a lossless WebP (needs ImageMagick).
 
-The renderer rejects unacknowledged input, missing tools/fonts, process timeouts, TeX errors, overfull boxes, missing glyph warnings, multi-page PDFs, malformed output, wrong PNG width/color type, and a non-white page corner. It keeps `.tex`, `.pdf`, `.svg`, and `.png` (plus `.webp` with `--webp`); other intermediates stay in a temporary directory.
+The renderer rejects unacknowledged input, missing tools/fonts, process timeouts, TeX errors, overfull boxes, missing glyph warnings, undefined font shapes, multi-page PDFs, malformed output, wrong PNG width/color type, and a non-white page corner. It keeps `.tex`, `.pdf`, `.svg`, and `.png` (plus `.webp` with `--webp`); other intermediates stay in a temporary directory.
 
 完成条件：the renderer exits zero, reports exactly one page, validates an RGB PNG, and the delivered SVG carries the white page rect.
 

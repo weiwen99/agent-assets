@@ -42,7 +42,7 @@ Read [the visual system](references/visual-system.md), then choose the matching 
 
 Copy the corresponding file in `templates/`; keep its viewBox, CSS tokens, definitions, and layer order. Adapt the canvas only when the content cannot remain legible at the template ratio.
 
-完成条件：the diagram has one declared viewpoint, one reading direction, and one dominant path.
+完成条件：the diagram has one declared viewpoint, one reading direction, and one dominant path; prose and quantity numbers stay serif, every identifier run uses the `code` token, and no plate is set entirely in mono.
 
 ### 3. Compose before connecting
 

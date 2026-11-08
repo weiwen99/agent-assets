@@ -20,7 +20,7 @@ xeCJK
 pgf/TikZ
 amsmath + amssymb + newunicodechar
 fandol  → FandolSong-Regular.otf, FandolSong-Bold.otf
-lm      → lmmono10-regular.otf
+lm      → lmmono10-regular.otf, lmmonolt10-bold.otf
 ```
 
 Full TeX Live and MacTeX normally include these packages. Minimal TeX Live/TinyTeX and MiKTeX installations may need `fandol` and `lm` installed through their package manager. The renderer reports the missing filename and exits; it never installs packages or substitutes a host font.
@@ -102,11 +102,13 @@ Do not feed XeLaTeX’s `.xdv` directly to dvisvgm for TikZ-heavy pages. PDF spe
 
 A font can be discoverable by Fontconfig and still fail in `xdvipdfmx`, for example with `sfnt: table not found`. The default uses static Fandol OTF files located by `kpsewhich`.
 
-Run `fixtures/font-smoke.tex` when changing the font contract. It covers Chinese regular/bold text, Latin and CJK mono text, circled numbers, and representative U+2190–21FF arrows. Any `Missing character:` warning fails the render instead of silently dropping a glyph.
+Run `fixtures/font-smoke.tex` when changing the font contract. It covers Chinese regular/bold text, Latin and CJK mono text, bold mono, circled numbers, and representative U+2190–21FF arrows. Any `Missing character:` warning fails the render instead of silently dropping a glyph.
 
 ### Silent font fallback
 
 A visually similar host font is not a safe fallback. Different metrics change node widths, wrapping, and edge geometry. Use an explicit override and repeat compilation, native-pixel inspection, and browser fit-to-window inspection.
+
+A declared font family is not a rendered font family. `\textbf{\texttt{...}}` without `BoldFont`, or `\emph` on a CJK run in a family that ships no italic, emits a `Font shape ... undefined` warning and quietly draws another face — the page looks plausible and the substitution is visible only in the log. The renderer treats any such warning as a failure, the same way as `Missing character`, and reports the substituted shapes so the author can declare the face or drop the markup.
 
 ### Untrusted TeX
 
@@ -118,7 +120,7 @@ Each external step—XeLaTeX, dvisvgm, Inkscape, and PNG validation—has a conf
 
 ## Verification
 
-The script checks deterministic properties: trusted-input acknowledgment, static font availability, per-step timeout, compilation, exactly one PDF page, overfull boxes, missing glyph warnings, output existence, PNG width, RGB color type, and white first pixel. The agent still performs semantic and visual checks:
+The script checks deterministic properties: trusted-input acknowledgment, static font availability, per-step timeout, compilation, exactly one PDF page, overfull boxes, missing glyph warnings, undefined font shapes, output existence, PNG width, RGB color type, and white first pixel. The agent still performs semantic and visual checks:
 
 - native PNG at 100%;
 - final PNG in a real browser near 1568×1161;

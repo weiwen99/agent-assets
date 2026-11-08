@@ -10,9 +10,10 @@
 \providecommand{\DiagramCJKRegular}{FandolSong-Regular.otf}
 \providecommand{\DiagramCJKBold}{FandolSong-Bold.otf}
 \providecommand{\DiagramMonoFont}{lmmono10-regular.otf}
+\providecommand{\DiagramMonoBold}{lmmonolt10-bold.otf}
 \setCJKmainfont{\DiagramCJKRegular}[BoldFont=\DiagramCJKBold]
-\setCJKmonofont{\DiagramCJKRegular}
-\setmonofont{\DiagramMonoFont}
+\setCJKmonofont{\DiagramCJKRegular}[BoldFont=\DiagramCJKBold]
+\setmonofont{\DiagramMonoFont}[BoldFont=\DiagramMonoBold]
 \newunicodechar{←}{\ensuremath{\leftarrow}}
 \newunicodechar{↑}{\ensuremath{\uparrow}}
 \newunicodechar{→}{\ensuremath{\rightarrow}}
@@ -26,5 +27,7 @@
 中文正文：架构图、业务流程图、逻辑图。\par
 \textbf{中文粗体：准入、持久化、恢复、终态。}\par
 \texttt{mono ASCII 0123456789 / 中文等宽文本}\par
+\textbf{\texttt{bold mono: 0x1-cli <domain> --json 0123456789}}\par
+\textbf{\texttt{CJK bold mono: 中文等宽粗体}}\par
 箭头与编号：← ↑ → ↓ ↔ ⇄ ⇒ ① ② ③
 \end{document}
