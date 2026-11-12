@@ -9,10 +9,10 @@ weiwen99 自用的 AI agent skill 集合。每个 skill 是一个独立目录 `s
 | `tikz-diagramming` | TikZ/LaTeX 技术图：red/rose core-dataflow 配色，输出矢量 PDF、自包含 SVG、清晰 PNG（可选 lossless WebP） |
 | `inkscape-diagramming` | 单色 Inkscape/SVG 架构图、业务流程图，输出可编辑 SVG + PNG |
 | `svg-web-delivery` | 网页 SVG 的主题自适应交付：主题信号、图内配色角色、透明遮挡、打印回退、真实宿主验收；两个绘图 skill 按需加载它 |
-| `de-ai-flavor` | 按仓库自己的手写基线测量并削掉 AI 文风，不丢事实 |
+| `de-ai-flavor` | 按仓库自己的手写基线测量并削掉 AI 文风，不丢事实；只读的论证审读模式查自设靶子与无依据的防误解提醒 |
 | `scala-best-practices` | Scala 3 项目创建与日常编码规范（Mill 优先） |
 | `org-inline-code-spacing` | Emacs org-mode 行内标记的空格边界与验收步骤 |
-| `design-scope-discipline` | 设计文档与 code review 的规模纪律（先量规模、gate 可证伪、代价量化） |
+| `design-scope-discipline` | 设计文档与 code review 的规模纪律（先量规模、gate 可证伪、代价量化）；评审含分析性文字时按同根链接加载 `de-ai-flavor` 的论证审读模式 |
 
 ## 安装
 
@@ -36,7 +36,7 @@ for name in svg-web-delivery tikz-diagramming inkscape-diagramming; do
 done
 ```
 
-只装调用方、或把调用方单独拍平到别处而没有兄弟 `svg-web-delivery`，自适应分支在加载处失败；固定底色分支不依赖它，照旧可用。目标机器没有本仓时，从 [github.com/weiwen99/agent-assets](https://github.com/weiwen99/agent-assets) 克隆**整个**仓库到可写工作区（同根引用与样例跟着一起来），记录解析到的 commit，再加载 `skills/svg-web-delivery/SKILL.md` 及其指向的 references、fixtures。
+只装调用方、或把调用方单独拍平到别处而没有兄弟 `svg-web-delivery`，自适应分支在加载处失败；固定底色分支不依赖它，照旧可用。`design-scope-discipline` 只在评审含分析性文字时按相对链接 `../de-ai-flavor/SKILL.md` 加载论证审读模式，装它时把 `de-ai-flavor` 放进同一个 skills 根；纯代码评审不需要它。目标机器没有本仓时，从 [github.com/weiwen99/agent-assets](https://github.com/weiwen99/agent-assets) 克隆**整个**仓库到可写工作区（同根引用与样例跟着一起来），记录解析到的 commit，再加载 `skills/svg-web-delivery/SKILL.md` 及其指向的 references、fixtures。
 
 槽位上已有手工拷贝时，要先跑一次迁移：它把要替换的条目移进带时间戳的备份目录（`agents/`、`claude/` 分开放），已经指向本仓的链接原样保留，遇到既不是目录也不是链接的东西立即停下。
 
@@ -58,12 +58,15 @@ scripts/adopt-local-slots.sh ~/projects/agent-assets
 python3 scripts/validate.py                 # 校验本仓 skills/
 python3 scripts/validate.py /path/to/skills # 校验扁平安装目录（同根依赖检查）
 python3 scripts/test_validate.py            # validator 单测，纯标准库，不联网
+python3 scripts/test_argument_review.py     # 论证审读的结构检查：模式指针、文件可达、零汉字脚本、fixtures
 python3 skills/svg-web-delivery/scripts/check-fixture.py --self-test
 ```
 
 检查每个 `SKILL.md` 的 `name`/`description` 非空、`name` 与目录同名、正文非空，并禁止本机绝对路径与内部主机名。此外检查每个 skill 目录内 Markdown 的相对链接：必须按安装槽位的逻辑路径解析到 skills 根内的文件或目录（skill 目录可以是符号链接），`#anchor` 只取路径、不核对锚点；代码块、行内代码、HTML 注释里的示例链接和外链不检查。缺兄弟依赖就是一条链接失败，这正是「单装调用方不可用」的检查方式。
 
-CI（`.github/workflows/validate.yml`）运行上述校验、单测及SVG夹具结构检查。真实浏览器的主题、原图和打印矩阵另按 `svg-web-delivery` 执行，结构检查不能代替渲染验收。
+`test_argument_review.py` 只查结构：两个技能的论证审读模式指针、引用文件可达、`de-ai-flavor` 第 1 步脚本在零汉字文本上不除零并标出语言口径、fixtures 的 ID 对齐与冻结 hash。它不判断任何一例的语义对错；语义只能靠跑模型并对照原始输出评分。
+
+CI（`.github/workflows/validate.yml`）运行上述校验、单测、论证审读结构检查及SVG夹具结构检查。真实浏览器的主题、原图和打印矩阵另按 `svg-web-delivery` 执行，结构检查不能代替渲染验收。
 
 ## 许可
 
