@@ -9,6 +9,7 @@ weiwen99 自用的 AI agent skill 集合。每个 skill 是一个独立目录 `s
 | `tikz-diagramming` | TikZ/LaTeX 技术图：red/rose core-dataflow 配色，输出矢量 PDF、自包含 SVG、清晰 PNG（可选 lossless WebP） |
 | `inkscape-diagramming` | 单色 Inkscape/SVG 架构图、业务流程图，输出可编辑 SVG + PNG |
 | `svg-web-delivery` | 网页 SVG 的主题自适应交付：主题信号、图内配色角色、透明遮挡、打印回退、真实宿主验收；两个绘图 skill 按需加载它 |
+| `wechat-longposter` | 手机长图海报：1080px 宽、1:3–1:5 的静态 PNG，结论前置、语义色、数据诚实；模板与 Chrome/CDP 精确截图渲染器 |
 | `de-ai-flavor` | 按仓库自己的手写基线测量并削掉 AI 文风，不丢事实；只读的论证审读模式查自设靶子与无依据的防误解提醒 |
 | `scala-best-practices` | Scala 3 项目创建与日常编码规范（Mill 优先） |
 | `org-inline-code-spacing` | Emacs org-mode 行内标记的空格边界与验收步骤 |

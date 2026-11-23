@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<!--
+  手机长图海报模板：固定 1080 px 宽，高度随内容。
+  视觉 token 只在本文件的 :root 与既有类里维护。
+  替换所有占位文案；只引用本地资源。
+-->
+<style>
+  :root{
+    --bg:#eef1f6;
+    --card:#ffffff;
+    --ink:#0f172a;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --accent:#2563eb;
+    --good:#059669;
+    --warn:#d97706;
+    --bad:#dc2626;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg)}
+  body{
+    width:1080px;
+    font-family:"PingFang SC","Hiragino Sans GB","STHeiti SC","Microsoft YaHei",sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{width:1080px;padding:52px 52px 56px}
+
+  /* Hero：对象身份 + 一句话结论 */
+  .hero{
+    background:linear-gradient(135deg,#0f172a 0%,#1e293b 62%,#243b53 100%);
+    border-radius:40px;
+    padding:58px 56px 54px;
+    color:#f8fafc;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-120px;top:-140px;
+    width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(56,189,248,.22),rgba(56,189,248,0) 68%);
+  }
+  .eyebrow{
+    display:flex;align-items:center;gap:16px;
+    font-size:26px;letter-spacing:.14em;color:#93c5fd;font-weight:600;
+  }
+  .eyebrow::before{content:"";width:30px;height:4px;border-radius:2px;background:#3b82f6}
+  h1{
+    font-size:74px;line-height:1.16;font-weight:700;
+    margin-top:28px;letter-spacing:-.5px;
+  }
+  .sub{
+    font-size:32px;color:#cbd5e1;margin-top:20px;
+    font-variant-numeric:tabular-nums;
+  }
+  .badges{display:flex;gap:16px;margin-top:38px;flex-wrap:wrap}
+  .badge{
+    display:inline-flex;align-items:center;gap:12px;
+    padding:14px 24px;border-radius:999px;
+    font-size:27px;font-weight:600;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    color:#e2e8f0;
+  }
+  .badge.good{color:#86efac;border-color:rgba(134,239,172,.38);background:rgba(34,197,94,.14)}
+  .badge .dot{width:14px;height:14px;border-radius:50%;background:currentColor;box-shadow:0 0 0 6px rgba(134,239,172,.14)}
+
+  /* 三个关键数字 */
+  .stats{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    background:var(--card);border-radius:32px;
+    margin-top:28px;padding:42px 18px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);
+  }
+  .stat{padding:0 30px;border-left:1px solid var(--line)}
+  .stat:first-child{border-left:0}
+  .stat .k{font-size:26px;color:var(--muted);font-weight:500}
+  .stat .v{
+    font-size:62px;font-weight:700;margin-top:14px;line-height:1;
+    letter-spacing:-1px;font-variant-numeric:tabular-nums;
+  }
+  .stat .v small{font-size:30px;font-weight:600;letter-spacing:0;color:var(--muted);margin-left:6px}
+  .stat .n{font-size:24px;color:var(--muted);margin-top:14px;line-height:1.5}
+
+  .section{margin-top:36px}
+  .card{
+    background:var(--card);border-radius:32px;
+    padding:46px 48px 50px;
+    box-shadow:0 10px 30px rgba(15,23,42,.06);
+  }
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:34px}
+  .sec-head h2{font-size:40px;font-weight:700;letter-spacing:-.3px}
+  .sec-head .hint{font-size:24px;color:var(--muted)}
+
+  /* 比例条：按真实比例设置 width */
+  .wear-label{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+  .wear-label .big{font-size:58px;font-weight:700;line-height:1;color:var(--good);letter-spacing:-1px}
+  .wear-label .big small{font-size:28px;color:var(--muted);font-weight:600;margin-left:8px;letter-spacing:0}
+  .wear-label .right{font-size:25px;color:var(--muted);text-align:right;line-height:1.5}
+  .bar{
+    height:30px;border-radius:15px;background:#e9eef5;overflow:hidden;
+    box-shadow:inset 0 1px 2px rgba(15,23,42,.06);
+  }
+  .bar i{display:block;height:100%;width:35%;min-width:14px;border-radius:15px;
+    background:linear-gradient(90deg,#10b981,#059669)}
+  .bar-scale{display:flex;justify-content:space-between;font-size:22px;color:#94a3b8;margin-top:12px;font-variant-numeric:tabular-nums}
+  .wear-note{
+    margin-top:26px;padding:24px 28px;border-radius:20px;
+    background:#f0fdf4;border:1px solid #bbf7d0;
+    font-size:27px;line-height:1.6;color:#166534;
+  }
+  .wear-note b{font-weight:700}
+
+  .grid4{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+  .mini{background:#f8fafc;border:1px solid var(--line);border-radius:20px;padding:26px 30px}
+  .mini .k{font-size:24px;color:var(--muted)}
+  .mini .v{font-size:38px;font-weight:700;margin-top:10px;font-variant-numeric:tabular-nums}
+  .mini .v.good{color:var(--good)}
+
+  /* 明细行 */
+  .rows{display:flex;flex-direction:column}
+  .row{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:28px;
+    padding:27px 0;border-top:1px solid var(--line);
+  }
+  .row:first-child{border-top:0;padding-top:0}
+  .row:last-child{padding-bottom:0}
+  .row .k{font-size:29px;color:#334155;font-weight:500;padding-top:4px}
+  .row .k em{display:block;font-style:normal;font-size:23px;color:#94a3b8;margin-top:8px;font-weight:400}
+  .row .v{
+    font-size:36px;font-weight:700;text-align:right;line-height:1.25;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .row .v small{font-size:24px;color:var(--muted);font-weight:500;margin-left:6px}
+  .row .v.warn{color:var(--warn)}
+  .row .v.good{color:var(--good)}
+
+  .spec .row .v{font-size:30px;font-weight:600}
+  .spec .row .k{font-size:27px}
+
+  /* 结论卡 */
+  .concl{
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:#e2e8f0;border-radius:32px;padding:48px 48px 52px;
+    box-shadow:0 14px 36px rgba(15,23,42,.16);
+  }
+  .concl h2{font-size:40px;font-weight:700;color:#f8fafc;margin-bottom:30px}
+  .item{display:flex;gap:22px;padding:22px 0;border-top:1px solid rgba(148,163,184,.18)}
+  .item:first-of-type{border-top:0;padding-top:0}
+  .num{
+    flex:0 0 46px;height:46px;border-radius:50%;
+    background:rgba(59,130,246,.18);color:#93c5fd;
+    font-size:25px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    margin-top:2px;
+  }
+  .item p{font-size:28px;line-height:1.72;color:#cbd5e1}
+  .item p b{color:#f8fafc;font-weight:700}
+  .item p .hl{color:#fbbf24;font-weight:700}
+
+  .foot{
+    margin-top:30px;text-align:center;font-size:23px;color:#94a3b8;line-height:1.7;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- 替换：对象与结论 -->
+  <div class="hero">
+    <div class="eyebrow">对象 · 状态报告</div>
+    <h1>设备或主题名称</h1>
+    <div class="sub">型号或规格&nbsp;&nbsp;·&nbsp;&nbsp;关键标识</div>
+    <div class="sub" style="margin-top:12px">接口或分类&nbsp;&nbsp;·&nbsp;&nbsp;补充信息</div>
+    <div class="badges">
+      <span class="badge good"><span class="dot"></span>状态正常</span>
+      <span class="badge">关键指标 0.00%</span>
+      <span class="badge">2026-01-01</span>
+    </div>
+  </div>
+
+  <!-- 替换：三个关键数字 -->
+  <div class="stats">
+    <div class="stat">
+      <div class="k">累计量</div>
+      <div class="v">0.00<small>TB</small></div>
+      <div class="n">单位换算 · 平均速率</div>
+    </div>
+    <div class="stat">
+      <div class="k">消耗比例</div>
+      <div class="v" style="color:#059669">0.00<small>%</small></div>
+      <div class="n">标称上限 000 TB</div>
+    </div>
+    <div class="stat">
+      <div class="k">运行时长</div>
+      <div class="v">0,000<small>h</small></div>
+      <div class="n">约 0.0 年通电时间</div>
+    </div>
+  </div>
+
+  <!-- 替换：核心证据组 -->
+  <div class="section">
+    <div class="card">
+      <div class="sec-head">
+        <h2>关键证据</h2>
+        <div class="hint">采集方法</div>
+      </div>
+
+      <div class="wear-label">
+        <div class="big">35.0%<small>已消耗</small></div>
+        <div class="right">剩余 65.0%<br>标称上限 000 TB，已用 00.0 TB</div>
+      </div>
+      <!-- 替换：把 i 的 width 改成真实百分比；接近 0 时保留 min-width -->
+      <div class="bar"><i></i></div>
+      <div class="bar-scale"><span>0 TB</span><span>000 TB</span></div>
+
+      <div class="wear-note">
+        按当前速率达到标称上限约需 <b>00 年</b>；以现有使用强度看，<br>
+        这个量级不构成近期风险。
+      </div>
+
+      <div class="grid4">
+        <div class="mini"><div class="k">备用容量</div><div class="v good">100%</div></div>
+        <div class="mini"><div class="k">异常计数</div><div class="v good">0</div></div>
+        <div class="mini"><div class="k">错误日志</div><div class="v good">0</div></div>
+        <div class="mini"><div class="k">严重告警</div><div class="v good">无</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 替换：使用强度或运行记录 -->
+  <div class="section">
+    <div class="card">
+      <div class="sec-head">
+        <h2>运行记录</h2>
+        <div class="hint">累计计数</div>
+      </div>
+      <div class="rows">
+        <div class="row">
+          <div class="k">累计时长<em>字段名</em></div>
+          <div class="v">0,000<small>小时</small></div>
+        </div>
+        <div class="row">
+          <div class="k">启动次数<em>字段名</em></div>
+          <div class="v">000<small>次</small></div>
+        </div>
+        <!-- 有异常时用 class="v warn"，正常时改成 class="v good" -->
+        <div class="row">
+          <div class="k">异常中断<em>占启动次数的 00%，主要风险项</em></div>
+          <div class="v warn">00<small>次</small></div>
+        </div>
+        <div class="row">
+          <div class="k">当前温度<em>历史超温累计 0 分钟</em></div>
+          <div class="v good">00<small>°C</small></div>
+        </div>
+        <div class="row">
+          <div class="k">维护累计时间<em>计数合计，占运行时长不到 0.3%</em></div>
+          <div class="v">≈00<small>小时</small></div>
+        </div>
+        <div class="row">
+          <div class="k">自动维护<em>定时器或任务名</em></div>
+          <div class="v good">已启用</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 替换：规格与口径 -->
+  <div class="section">
+    <div class="card spec">
+      <div class="sec-head">
+        <h2>规格与口径</h2>
+        <div class="hint">标称值</div>
+      </div>
+      <div class="rows">
+        <div class="row">
+          <div class="k">型号</div>
+          <div class="v">型号字符串</div>
+        </div>
+        <div class="row">
+          <div class="k">容量 / 当前占用</div>
+          <div class="v">000 GB&nbsp;&nbsp;·&nbsp;&nbsp;00.0 / 000.0 GiB</div>
+        </div>
+        <div class="row">
+          <div class="k">接口 / 协议</div>
+          <div class="v">接口&nbsp;&nbsp;·&nbsp;&nbsp;协议版本</div>
+        </div>
+        <div class="row">
+          <div class="k">介质 / 缓存</div>
+          <div class="v">介质类型&nbsp;&nbsp;·&nbsp;&nbsp;缓存规格</div>
+        </div>
+        <div class="row">
+          <div class="k">标称性能</div>
+          <div class="v">读 0000 / 写 0000 MB/s</div>
+        </div>
+        <div class="row">
+          <div class="k">标称寿命 / 可靠性</div>
+          <div class="v">000 TBW&nbsp;&nbsp;·&nbsp;&nbsp;MTBF 000 万小时</div>
+        </div>
+        <div class="row">
+          <div class="k">固件 / 序列号</div>
+          <div class="v">00000000&nbsp;&nbsp;·&nbsp;&nbsp;00000000000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 替换：结论，三条可转述的话 -->
+  <div class="section">
+    <div class="concl">
+      <h2>结论</h2>
+      <div class="item">
+        <div class="num">1</div>
+        <p><b>状态正常，暂不需要处理。</b>关键数字远低于标称上限，当前没有可执行的维护动作。</p>
+      </div>
+      <div class="item">
+        <div class="num">2</div>
+        <p><b>真正的风险项是异常中断。</b>累计 00 次，占启动次数 00%；建议检查供电与关机流程。</p>
+      </div>
+      <div class="item">
+        <div class="num">3</div>
+        <p><b>结构性限制不影响当前使用。</b>单点部署意味着故障时没有冗余，但当前指标没有恶化迹象。</p>
+      </div>
+    </div>
+    <div class="foot">
+      数据来源：采集方法 · 对象与位置 · 采集时间<br>
+      规格来源：标称参数出处
+    </div>
+  </div>
+</div>
+</body>
+</html>
