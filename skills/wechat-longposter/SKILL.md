@@ -53,11 +53,15 @@ description: 手机长图海报：把结论、关键数字和证据排成 1080px
 
 ### 4. 渲染 PNG
 
+渲染器需要 Node 22+（内置 WebSocket/fetch）和 Chrome/Chromium。CFA 会把 `${SKILL_DIR}` 替换为技能绝对目录，并把本地 Markdown 链接改成绝对路径：
+
 ```bash
-node scripts/render.mjs assets/poster.html /tmp/poster.png
+node "${SKILL_DIR}/scripts/render.mjs" "${SKILL_DIR}/assets/poster.html" /tmp/poster.png
 ```
 
-渲染器需要 Node 22+（内置 WebSocket/fetch），用 Chrome headless + CDP 测量 `scrollHeight`，按精确高度截图，输出 1080 px 宽的 sRGB PNG。Chrome 不在默认路径时用 `--chrome` 或 `CHROME_BIN` 指定。
+其它 harness 用 skillDir 的实际路径替换 `${SKILL_DIR}`。输出路径换成当前任务可写的目录；受沙箱约束的 CFA 实例不写未授权路径。
+
+渲染器用 Chrome headless + CDP 测量 `scrollHeight`，按精确高度截图，输出 1080 px 宽的 sRGB PNG。Chrome 不在默认路径时用 `--chrome` 或 `CHROME_BIN` 指定；找不到浏览器时报告依赖缺失，不伪造 PNG。
 
 完成条件：命令成功；输出 PNG 的宽度为 1080 px，高度等于测得的内容高度。
 
