@@ -194,7 +194,7 @@ async function main() {
         "--disable-extensions",
         "--hide-scrollbars",
         "--force-device-scale-factor=1",
-        "--window-size=1080,1200",
+        `--window-size=${args.width},1200`,
         "about:blank",
       ],
       { stdio: "ignore" }
