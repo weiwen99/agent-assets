@@ -1,11 +1,18 @@
 ---
 name: org-inline-code-spacing
-description: 生成或修改任何 Emacs org-mode 文本（.org 文件、聊天里的 org 片段、commit message 里的 org 语法）时使用：行内标记 =text= 与 *bold*、/italic/ 等强调标记必须与中文和标点保持半角空格边界；禁止用 **bold** 伪装标题，禁止用 Markdown backtick 当代码标记。Use when writing or editing Emacs org-mode text.
+description: 写入或修改 .org 文件、或用户明确要求输出 org 语法文本时使用（聊天答复与 .md 文档不适用本规范，一律保持 Markdown）：org 文本里的行内标记 =text=、*bold*、/italic/ 等必须与中文和标点保持半角空格边界；org 文本里禁止用 **bold** 伪装标题、禁止用 Markdown backtick 当代码标记。Use when writing or editing .org files, or when the user explicitly asks for org syntax.
 ---
 
 # Org-mode 行内标记空格约束
 
-生成 Emacs org-mode 文档（`.org` 文件或任何 org 语法文本）时，行内标记必须遵守边界空格约束。本规范覆盖两类标记：原文/代码标记 `=text=` 与强调标记（`*bold*`、`/italic/`、`_underline_`、`+strike+`、`~code~`）。
+本规范只适用于两类场景：写入或修改 `.org` 文件；用户明确要求输出 org 语法文本。这两类文本里，行内标记必须遵守边界空格约束。本规范覆盖两类标记：原文/代码标记 `=text=` 与强调标记（`*bold*`、`/italic/`、`_underline_`、`+strike+`、`~code~`）。
+
+## 不适用范围：聊天答复与 Markdown 文档
+
+聊天答复、总结、报告、`.md` 文档、commit message 都不是 org 文本，一律用 Markdown：`` `code` ``、`**bold**`。
+
+- 刚写完 `.org` 文件之后也照此办理：答复正文里不得出现 `=x=`、`~x~`、`*bold*`（用户明确要求贴出的那一段除外）。
+- 只有用户明确要求「贴 org 片段」「按 org 写」时（例如要求在聊天里贴一段 org 源码），答复中的那一段才按本规范处理，其余正文仍是 Markdown。
 
 ## 通用原则
 
@@ -51,10 +58,11 @@ description: 生成或修改任何 Emacs org-mode 文本（.org 文件、聊天�
 
 ## 验收步骤
 
-生成或修改任何 org 文本（`.org` 文件、聊天里的 org 片段、commit message 里的 org 语法）后，发送或提交前按顺序执行：
+生成或修改 org 文本（`.org` 文件，或用户明确要求使用 org 语法的文本）后，发送或提交前按顺序执行第 1–5 条；第 6 条只要本轮给了聊天答复就要执行，与是否写了 org 文本无关：
 
 1. **配对扫描。** 逐行从行首向右配对标记（跳过 `#+BEGIN_SRC`/`#+BEGIN_EXAMPLE` 块与 `#+` 行）：开标记左侧必须是行首或一个半角空格，闭标记右侧必须是行尾或一个半角空格。`=a= =b=` 合法；`甲=a= 乙`、`=a=乙` 不合法。
 2. **内侧扫描。** 每对标记之间不得出现首尾空格：`= a=`、`=a =`、`= a =` 都判失败。
 3. **强调同规。** 对 `*bold*`、`/italic/`、`_underline_`、`+strike+`、`~code~` 重复第 1–2 条，判定标准与 `=code=` 相同。
-4. **渲染确认。** 有 Emacs 时用 `emacs file.org` 打开：标记应按 org 语法着色，而不是被当作普通字符。纯聊天输出无法渲染时，以第 1–3 条为通过标准。
-5. **零例外交付。** 任一失败改到通过再交付；不确定时按「禁止事项」最后一条降级为 `=code=` 或纯文本。
+4. **渲染确认。** 有 Emacs 时用 `emacs file.org` 打开：标记应按 org 语法着色，而不是被当作普通字符。用户明确要求贴出的那一段无法渲染时，以第 1–3 条为通过标准。
+5. **零例外交付。** 任一失败改到通过再交付；不确定时按「禁止事项」最后一条降级为 `=code=` 或纯文本——这条降级只作用于 org 文本，聊天答复里改回 Markdown backtick，不要用 `=code=` 降级。
+6. **答复格式。** 若本轮给出聊天答复，确认答复正文用的是 Markdown，没有混入 `=x=`、`*bold*`、`~x~` 这类 org 标记；用户明确要求贴出的那一段除外。判据：正文里除该段外不出现 `=x=`、`~x~`、`*bold*` 三种形态；Markdown 的 `*斜体*`、`**加粗**`、`` `code` ``、`~~删除~~`、列表 `* item` 不算 org 标记。

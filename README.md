@@ -12,7 +12,7 @@ weiwen99 自用的 AI agent skill 集合。每个 skill 是一个独立目录 `s
 | `wechat-longposter` | 手机长图海报：1080px 宽、1:3–1:5 的静态 PNG，结论前置、语义色、数据诚实；模板与 Chrome/CDP 精确截图渲染器 |
 | `de-ai-flavor` | 按仓库自己的手写基线测量并削掉 AI 文风，不丢事实；只读的论证审读模式查自设靶子与无依据的防误解提醒 |
 | `scala-best-practices` | Scala 3 项目创建与日常编码规范（Mill 优先） |
-| `org-inline-code-spacing` | Emacs org-mode 行内标记的空格边界与验收步骤 |
+| `org-inline-code-spacing` | Emacs org-mode 行内标记的空格边界与验收步骤；只管 org 文本（`.org` 文件或用户明确要求的 org 片段），聊天答复与 `.md` 保持 Markdown |
 | `design-scope-discipline` | 设计文档与 code review 的规模纪律（先量规模、gate 可证伪、代价量化）；评审含分析性文字时按同根链接加载 `de-ai-flavor` 的论证审读模式 |
 
 ## 安装
